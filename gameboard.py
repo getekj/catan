@@ -23,7 +23,9 @@ class GameBoard:
         self._list_locations = []
         self._player_list = []
         self._build_buttons = []
+        self._trade_buttons = []
         self._robber_hex_tile = None
+        self._dice = None
 
     def get_locations(self):
         return self._list_locations
@@ -38,8 +40,20 @@ class GameBoard:
         """
         Creates the button objects that are used to players to select turn actions
         """
-        settlement_button = Settlement_Button()
-        self._build_buttons.append(settlement_button)
+
+        self._build_buttons.append(Settlement_Button())
+        self._build_buttons.append(Road_Button())
+        self._build_buttons.append(City_Button())
+        self._build_buttons.append(Development_Card())
+        self._build_buttons.append(End_Turn())
+
+        self._dice = Dice()
+
+        self._trade_buttons.append(Wheat_Button())
+        self._trade_buttons.append(Brick_Button())
+        self._trade_buttons.append(Wood_Button())
+        self._trade_buttons.append(Wool_Button())
+        self._trade_buttons.append(Ore_Button())
 
     def create_hex_tiles(self):
         """
@@ -137,8 +151,16 @@ class GameBoard:
             hextile.draw_hex()
 
     def draw_buttons(self):
+        """
+        Iterates through both buttons lists (build buttons and trade buttons) to draw them to the screen
+        """
         for button in self._build_buttons:
             button.draw_button()
+
+        for button in self._trade_buttons:
+            button.draw_button()
+
+        self._dice.draw_dice()
 
     def update_robber_position(self):
         """
