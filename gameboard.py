@@ -26,6 +26,12 @@ class GameBoard:
     def get_locations(self):
         return self._list_locations
 
+    def set_robber_tile(self, hex_tile):
+        self._robber_hex_tile = hex_tile
+
+    def get_robber_tile(self):
+        return self._robber_hex_tile
+
     def create_hex_tiles(self):
         """
         Creates the 19 hexagon tiles that make up the game board
@@ -60,7 +66,7 @@ class GameBoard:
         self._list_hex_tiles.append(desert_hexagon)
 
         # adding robber to hexagon tile for initial location
-        #self.update_robber_tile(desert_hexagon)
+        self.set_robber_tile(desert_hexagon)
 
     def create_locations(self):
         """
@@ -104,6 +110,30 @@ class GameBoard:
                 elif (neigh_x > loc_x - 60 and neigh_x < loc_x + 60) and (neigh_y > loc_y - 35 and neigh_y < loc_y + 35):
                     neighbour_locations.append(neighbour_location)
             location.set_neighbours_list(neighbour_locations)
+
+    def draw_gameboard(self):
+        """
+        Calls on all functions that will draw the gameboard to the screen
+        """
+        self.draw_hex_tiles()
+        self.update_robber_position()
+        pygame.display.flip()
+
+    def draw_hex_tiles(self):
+        """
+        Calls on the function draw to display all hex tiles to the screen
+        """
+        for hextile in self._list_hex_tiles:
+            hextile.draw_hex()
+
+    def update_robber_position(self):
+        """
+        Uses the position of the current robber tile to draw the robber image at this location
+        """
+        position = self._robber_hex_tile.get_center_coords()
+        robber_image = pygame.image.load("images\\robber.png").convert_alpha()
+        screen.blit(robber_image, (position[0] - 25, position[1] - 40))
+        pygame.display.flip()
 
 
 class HexTile:
@@ -169,7 +199,7 @@ class HexTile:
         Displays the hex tile to the screen surface
         """
         pygame.draw.polygon(screen, self._colour, self._coordinates)
-        #print_text(self._number, (self._center[0] - 15, self._center[1] - 15))
+        print_text(self._number, (self._center[0] - 15, self._center[1] - 15))
 
 
 class Location:
@@ -209,3 +239,11 @@ class Location:
 
     def set_neighbours_list(self, list_of_neighbours):
         self._neighbours_list = list_of_neighbours
+
+
+def print_text(text, position, colour=BLACK):
+    """
+    Displays text to screen
+    """
+    print_to_screen = GAME_FONT.render(text, True, colour)
+    screen.blit(print_to_screen, position)
