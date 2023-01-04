@@ -6,6 +6,7 @@
 import math
 import random
 from global_vars import *
+from buttons import *
 
 class GameBoard:
     """
@@ -21,6 +22,7 @@ class GameBoard:
         self._list_hex_tiles = []
         self._list_locations = []
         self._player_list = []
+        self._build_buttons = []
         self._robber_hex_tile = None
 
     def get_locations(self):
@@ -31,6 +33,13 @@ class GameBoard:
 
     def get_robber_tile(self):
         return self._robber_hex_tile
+
+    def create_buttons(self):
+        """
+        Creates the button objects that are used to players to select turn actions
+        """
+        settlement_button = Settlement_Button()
+        self._build_buttons.append(settlement_button)
 
     def create_hex_tiles(self):
         """
@@ -117,6 +126,7 @@ class GameBoard:
         """
         self.draw_hex_tiles()
         self.update_robber_position()
+        self.draw_buttons()
         pygame.display.flip()
 
     def draw_hex_tiles(self):
@@ -125,6 +135,10 @@ class GameBoard:
         """
         for hextile in self._list_hex_tiles:
             hextile.draw_hex()
+
+    def draw_buttons(self):
+        for button in self._build_buttons:
+            button.draw_button()
 
     def update_robber_position(self):
         """
