@@ -7,13 +7,18 @@
 import sys
 import pygame
 from global_vars import *
+from gameboard import *
 
 def start_game():
     """ Creates screen, GameBoard (and all its associated objects), and
      calls generate players to set up the initial game play"""
-    screen.fill(LIGHT_BLUE)
 
+    # filling background
+    screen.fill(LIGHT_BLUE)
     pygame.display.flip()
+
+    # initializing GameBoard
+    game = GameBoard()
 
 def main():
     """ The initial setup and main game loop that continues to run as long as there is no winner or
