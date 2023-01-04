@@ -19,6 +19,9 @@ def start_game():
 
     # initializing GameBoard
     game = GameBoard()
+    game.create_hex_tiles()
+    game.create_locations()
+    print(len(game.get_locations()))
 
 def main():
     """ The initial setup and main game loop that continues to run as long as there is no winner or

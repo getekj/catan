@@ -10,6 +10,7 @@ from global_vars import *
 class GameBoard:
     """
     Create the game board for game play
+
     Center indicates the coordinates of the center of the board
     Hex_size indicates the size of each HexTile in pixels
     All of the lists contain objects of the class described in the name
@@ -21,6 +22,9 @@ class GameBoard:
         self._list_locations = []
         self._player_list = []
         self._robber_hex_tile = None
+
+    def get_locations(self):
+        return self._list_locations
 
     def create_hex_tiles(self):
         """
@@ -56,8 +60,50 @@ class GameBoard:
         self._list_hex_tiles.append(desert_hexagon)
 
         # adding robber to hexagon tile for initial location
-        self.update_robber_tile(desert_hexagon)
+        #self.update_robber_tile(desert_hexagon)
 
+    def create_locations(self):
+        """
+        Creates all possible Location objects that settlements and roads can be placed on the board
+        """
+
+        location_points = []
+
+        # iterate through all hexagon coordinates, create a location point as long as it is not a duplicate as some
+        # hexagon corners overlap
+        for hex_tile in self._list_hex_tiles:
+            single_hex_coords = hex_tile.get_coordinates()
+            for coord in single_hex_coords:
+                if coord not in location_points:
+                    location_points.append(coord)
+
+        # iterate through list of all possible location points on board and create a Location object for each
+        for location_coords in location_points:
+            point = Location(location_coords[0], location_coords[1])
+            self._list_locations.append(point)
+
+        # create neighbours for each location to keep track of the adjacent spaces
+        self.create_location_neighbours()
+
+    def create_location_neighbours(self):
+        """
+        Create the neighbouring location points to ensure settlements and cities cannot be placed next to each other
+        and roads are being placed to other roads or structures
+        """
+
+        # iterate through the list of locations on game board
+        for location in self._list_locations:
+            neighbour_locations = []
+            loc_x, loc_y = location.get_x_y_coords()
+            # iterate through each location checking if they are potentially a neighbour
+            for neighbour_location in self._list_locations:
+                neigh_x, neigh_y = neighbour_location.get_x_y_coords()
+                # if the neighbours are within range of original location, will be added to the neighbour list
+                if (neigh_x > loc_x - 5 and neigh_x < loc_x + 5) and (neigh_y > loc_y - 65 and neigh_y < loc_y + 65):
+                    neighbour_locations.append(neighbour_location)
+                elif (neigh_x > loc_x - 60 and neigh_x < loc_x + 60) and (neigh_y > loc_y - 35 and neigh_y < loc_y + 35):
+                    neighbour_locations.append(neighbour_location)
+            location.set_neighbours_list(neighbour_locations)
 
 
 class HexTile:
@@ -124,3 +170,42 @@ class HexTile:
         """
         pygame.draw.polygon(screen, self._colour, self._coordinates)
         #print_text(self._number, (self._center[0] - 15, self._center[1] - 15))
+
+
+class Location:
+    """
+    Creates a location object that represents one of the possible "buildable" points, where a player is allowed
+    to place a settlement or city. A player may place a road that is attached to two adjacent locations.
+    x_coord and y_coord are integers representing the location x and y coordinates
+    neighbour_list is a list of all adjacent locations one space away
+    bool_road, bool_settlement, and bool_city will be True if the corresponding object is on the location, False otherwise
+    """
+
+    def __init__(self, x_coord, y_coord):
+        self._x_coord = x_coord
+        self._y_coord = y_coord
+        self._neighbours_list = []
+        self._bool_road = False
+        self._bool_settlement = False
+        self._bool_city = False
+
+    def set_road_bool(self):
+        self._bool_road = True
+
+    def get_road_bool(self):
+        return self._bool_road
+
+    def get_x_y_coords(self):
+        return self._x_coord, self._y_coord
+
+    def get_settlement_bool(self):
+        return self._bool_settlement
+
+    def set_settlement_bool(self):
+        self._bool_settlement = True
+
+    def get_neighbours_list(self):
+        return self._neighbours_list
+
+    def set_neighbours_list(self, list_of_neighbours):
+        self._neighbours_list = list_of_neighbours
