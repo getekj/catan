@@ -39,6 +39,12 @@ class GameBoard:
     def get_hex_tiles(self):
         return self._list_hex_tiles
 
+    def get_player_list(self):
+        return self._player_list
+
+    def set_player_list(self, player_list):
+        self._player_list = player_list
+
     def create_buttons(self):
         """
         Creates the button objects that are used to players to select turn actions
@@ -149,6 +155,7 @@ class GameBoard:
         self.draw_hex_tiles()
         self.update_robber_position()
         self.draw_buttons()
+        self.draw_settlement_icons()
         pygame.display.flip()
 
     def draw_hex_tiles(self):
@@ -170,6 +177,47 @@ class GameBoard:
 
         self._dice.draw_dice()
 
+    def draw_settlement_icons(self):
+        """
+        Draws the settlement icons next to each player name to indicate the colour of the player's structures
+        """
+        for index in range(len(self._player_list)):
+            player = self._player_list[index]
+            colour = player.get_player_colour()
+            x, y = PLAYER_POSITIONS[index]
+            x += 120
+            y += 15
+            pentagon_coordinates = [(x - 10, y - 10), (x - 10, y + 10), (x + 10, y + 10), (x + 10, y - 10), (x, y - 20)]
+            pygame.draw.polygon(screen, colour, pentagon_coordinates)
+
+        pygame.display.flip()
+
+    def display_player_screen(self):
+        """
+        Fills in the biege display boxes with player stats
+        """
+
+        # Creating player display screen
+        for index in range(len(self._player_list)):
+            player = self._player_list[index]
+            resources = player.get_resources()
+            background = player.get_player_rect()
+            victory_points = player.get_victory_points()
+
+            # clear background
+            player.draw_player_rect()
+
+            down_pos = 35
+            for key, value in resources.items():
+                line = str(key) + " : " + str(value)
+                print_text(line, (PLAYER_POSITIONS[index][0] + 10, PLAYER_POSITIONS[index][1] + down_pos))
+                down_pos += 25  # add 25 to move it down screen
+                pygame.display.flip()
+
+            string_victory_points = "VP: " + str(victory_points)
+            # 160, 35 + 25*5 + 10 wiggle room
+            print_text(string_victory_points, (PLAYER_POSITIONS[index][0] + 10, PLAYER_POSITIONS[index][1] + 170))
+
     def update_robber_position(self):
         """
         Uses the position of the current robber tile to draw the robber image at this location
@@ -177,6 +225,16 @@ class GameBoard:
         position = self._robber_hex_tile.get_center_coords()
         robber_image = pygame.image.load("images\\robber.png").convert_alpha()
         screen.blit(robber_image, (position[0] - 25, position[1] - 40))
+        pygame.display.flip()
+
+    def update_text_box(self, text):
+        """
+        Prints game instructions underneath the catan board with a white rectangular background
+        Takes text, a string, as a parameter to indicate the text that should be printed
+        """
+        rect = pygame.Rect((175, 540), (515, 40))
+        pygame.draw.rect(screen, WHITE, rect)
+        print_text(text, (180, 545))
         pygame.display.flip()
 
 
