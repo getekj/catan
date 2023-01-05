@@ -85,6 +85,12 @@ class Player:
         """
         Creates a new settlement on the board if there are no direct neighbours nearby, calls on check_to_build_settlement
         to ensure the settlement is being placed on a buildable location
+
+        Takes as parameters:
+            position - a tuple indicating the center coordinate of the new settlement
+            colour - a string indicating the colour of the settlement
+            game - the GameBoard object
+            location - the location object where we are building the settlement
         """
 
         # Checking if settlement is not on a direct neighbour location
@@ -100,8 +106,7 @@ class Player:
             # otherwise, go back to place_settlement to wait for new mouse click
             self.place_settlement(game)
 
-        # only want to update screen after initial game setup
-        # if len(self._settlements) > 2:
+        # update screen with new resource and victory point count
         game.display_player_screen()
 
     def check_to_build_settlement(self, location):
@@ -135,6 +140,102 @@ class Player:
                 player_hand[key] = resource_value - 1
 
         return True
+
+    def place_road(self, game):
+        """
+        The player clicks on a position on the board to place a road and build_road is called to create the road
+        at the selected location
+        """
+
+        road_locations = game.get_locations()
+
+        # while loop to wait for user click to indicate new road location
+        while True:
+            event = pygame.event.wait()
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONUP:
+                road_coordinates = []
+                coordinate_locations = []
+                for location in road_locations:
+                    # location is the object, need x,y coordinate of location
+                    coordinates = location.get_x_y_coords()
+                    distance_x = coordinates[0] - event.pos[0]
+                    distance_y = coordinates[1] - event.pos[1]
+                    # Checking if the mouse click is nearby a potential road location
+                    if distance_x > -40 and distance_x < 40 and distance_y > -40 and distance_y < 40:
+                        road_coordinates.append(coordinates)
+                        coordinate_locations.append(location)
+                        # once we have two viable road coordinates, we can build the road inbetween
+                        if len(road_coordinates) == 2:
+                            self.build_road(road_coordinates, self._colour, game, coordinate_locations)
+                            # Updating location objects to indicate a road is on the spot
+                            coordinate_locations[0].set_road_bool()
+                            coordinate_locations[1].set_road_bool()
+                            return
+                        # Need to continue searching for the second coordinate that is nearby to place road inbetween
+                        continue
+                    else:
+                        # if the current coordinate in the list is not a match, continue searching through the list
+                        continue
+                    #return
+
+    def build_road(self, position, colour, game, coordinate_locations):
+        """
+        Creates a new road on the board, calls on check_to_build_road to ensure that the road is being placed
+        on a buildable location
+
+        Takes as parameters:
+            position - a list of two tuples indicating the two end coordinates of the new road
+            colour - a string indicating the colour of the road
+            game - the GameBoard object
+            coordinate_locations - a list of the two location objects where we are building the road in between
+        """
+
+        bool_build_road = self.check_to_build_road(coordinate_locations)
+        if bool_build_road is True:
+            new_road = Road(position, colour)
+            new_road.draw_road()
+            self._roads.append(new_road)
+        else:
+            # not able to build in this location and need to wait for user to click on new location
+            self.place_road(game)
+
+        game.display_player_screen()
+
+    def check_to_build_road(self, coordinate_locations):
+        """
+        Takes as parameter a list of two location objects, the potential road location
+        Checks if the player has enough resources to buy a road and that there is another road or settlement at the
+        location to attach to
+            *UNLESS the settlement is placed during initial setup in which case we don't check or remove the resources*
+        If the player can build the road, it removes the resources from the player hand and returns True
+        Returns False otherwise
+        """
+
+        # checking to see if there is already a connected road or settlement at the point
+        if coordinate_locations[0].get_road_bool() is False and coordinate_locations[
+            0].get_settlement_bool() is False and \
+                coordinate_locations[1].get_road_bool() is False and coordinate_locations[
+            1].get_settlement_bool() is False:
+            return False
+
+        player_hand = self._resources
+        for key in player_hand:
+            if (key == "brick" or key == "wood") and player_hand[key] < 1:
+                # if we are in the setup phase, do not require resources to build
+                if len(self._roads) < 2:
+                    return True
+                return False
+
+        # remove the resources for payment to build road
+        for key in player_hand:
+            if key == "brick" or key == "wood":
+                resource_value = player_hand[key]
+                player_hand[key] = resource_value - 1
+
+        return True
+
 
     def add_victory_point(self, number_of_points):
         """

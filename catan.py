@@ -54,23 +54,23 @@ def generate_players(game):
     game.set_player_list(player_list)
     game.draw_settlement_icons()
 
-
     # First round of settlements to add onto game board in order from player 1 - 4
     for new_player in player_list:
         game.update_text_box(str(new_player.get_player_name()) + ": Place your settlement")
         new_player.place_settlement(game)
         game.update_text_box(str(new_player.get_player_name()) + ": Place your road")
-        #new_player.place_road(game)
+        new_player.place_road(game)
 
-    # # Now add second set of settlements/roads in reverse order
-    # player_list.reverse()
-    # for player in player_list:
-    #     game.update_text_box(str(player.get_player_name()) + ": Place your settlement")
-    #     player.place_settlement(locations, game)
-    #     game.update_text_box(str(player.get_player_name()) + ": Place your road")
-    #     player.place_road(locations, game)
-    #
-    # player_list.reverse()  # bringing back to normal order
+    # Now add second set of settlements/roads in reverse order
+    player_list.reverse()
+
+    for player in player_list:
+        game.update_text_box(str(player.get_player_name()) + ": Place your settlement")
+        player.place_settlement(game)
+        game.update_text_box(str(player.get_player_name()) + ": Place your road")
+        player.place_road(game)
+
+    player_list.reverse()  # bringing back to normal order
     #game.display_player_screen()
 
 def main():
