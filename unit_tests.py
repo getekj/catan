@@ -5,6 +5,7 @@
 import unittest
 from global_vars import *
 from gameboard import GameBoard, HexTile, Location
+from buttons import *
 
 class CatanTester(unittest.TestCase):
     """Contains the unit tests for CatanTester"""
@@ -33,6 +34,13 @@ class CatanTester(unittest.TestCase):
         self.assertEqual(hex1.get_number(), "9")
         self.assertEqual(hex1.get_center_coords(), (373, 370))
         self.assertEqual(hex1.get_coordinates(), [(373, 320), (416, 345), (416, 395), (373, 420), (330, 395), (330,345)])
+
+    def test3(self):
+        """Testing the Button classes initialization"""
+        settlement_button = Settlement_Button()
+        self.assertEqual(settlement_button.get_shape(), pygame.Rect(1100, 315, 60, 65))
+        wheat_button = Wheat_Button()
+        self.assertEqual(wheat_button.get_position(), (860, 70))
 
 
 if __name__ == '__main__':

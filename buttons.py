@@ -56,6 +56,9 @@ class Button:
     def get_shape(self):
         return self._shape
 
+    def get_position(self):
+        return self._position
+
     def draw_button(self):
         """
         Draws the button on the game screen

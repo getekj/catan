@@ -138,6 +138,11 @@ class GameBoard:
         """
         Calls on all functions that will draw the gameboard to the screen
         """
+        # displays the building cost image
+        building_cost_image = pygame.image.load("images/building_costs.jpg").convert()
+        screen.blit(building_cost_image, (875, 185))
+
+        print_text("Trade Resources", (920, 30))
         self.draw_hex_tiles()
         self.update_robber_position()
         self.draw_buttons()
