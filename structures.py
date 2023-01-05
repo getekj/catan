@@ -13,6 +13,10 @@ class Settlement:
         self._position = position
         self._colour = colour
         self._surrounding_tiles = []
+        self._victory_points = 1
+
+    def get_position(self):
+        return self._position
 
     def get_surrounding_tiles(self):
         return self._surrounding_tiles
@@ -42,9 +46,12 @@ class Settlement:
 
 class Road:
     """
+    Takes as parameters:
+        road coordinates, a list containing two tuples that contain the start and end coordinates of the road
+        colour, a string indicating the colour of the road
     Creates a road object attached to two locations on the gameboard belonging to one of the players
     """
-    def __init__(self, ):
+    def __init__(self, road_coordinates, colour):
         self._colour = colour
         self._start_pos = road_coordinates[0]
         self._end_pos = road_coordinates[1]
@@ -58,8 +65,13 @@ class Road:
 
 
 class City(Settlement):
-
-    def __init__(self, position, colour,):
+    """
+    Creates a city object on a location on the gameboard belonging to one of the players
+    Inherits from Settlement class
+    """
+    def __init__(self, position, colour):
         super().__init__(position, colour)
         self._victory_points = 2
 
+    def get_victory_points(self):
+        return self._victory_points

@@ -9,6 +9,7 @@ import pygame
 from global_vars import *
 from gameboard import *
 from buttons import *
+from structures import *
 
 def start_game():
     """ Creates screen, GameBoard (and all its associated objects), and

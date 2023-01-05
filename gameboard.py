@@ -36,6 +36,9 @@ class GameBoard:
     def get_robber_tile(self):
         return self._robber_hex_tile
 
+    def get_hex_tiles(self):
+        return self._list_hex_tiles
+
     def create_buttons(self):
         """
         Creates the button objects that are used to players to select turn actions

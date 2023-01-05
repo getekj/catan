@@ -6,6 +6,7 @@ import unittest
 from global_vars import *
 from gameboard import GameBoard, HexTile, Location
 from buttons import *
+from structures import *
 
 class CatanTester(unittest.TestCase):
     """Contains the unit tests for CatanTester"""
@@ -41,6 +42,22 @@ class CatanTester(unittest.TestCase):
         self.assertEqual(settlement_button.get_shape(), pygame.Rect(1100, 315, 60, 65))
         wheat_button = Wheat_Button()
         self.assertEqual(wheat_button.get_position(), (860, 70))
+
+    def test4(self):
+        """Testing the Settlement, Road, and City class initialization and methods"""
+        game = GameBoard()
+        game.create_hex_tiles()
+        game.create_locations()
+        settlement1 = Settlement((321, 40), RED)
+        settlement1.create_surrounding_tiles(game)
+        self.assertEqual(settlement1.get_position(), (321, 40))
+        surrounding_tiles = settlement1.get_surrounding_tiles()
+        self.assertEqual(surrounding_tiles[0].get_coordinates(), [(321, 40), (373, 70), (373, 130), (321, 160), (269, 130), (269, 70)])
+        city1 = City((234, 456), ORANGE)
+        self.assertEqual(city1.get_victory_points(), 2)
+        self.assertEqual(city1.get_surrounding_tiles(), [])
+
+
 
 
 if __name__ == '__main__':
