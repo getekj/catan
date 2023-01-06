@@ -73,6 +73,47 @@ class Player:
         # If a 7 was rolled, need to call robber_rolled to move the robber
         if dice_roll == 7:
             self.robber_rolled(game, player)
+        else:
+            # Check the surrounding tiles of each player's settlements to see if they can collect resources from the dice roll
+            self.collect_resources_from_roll(dice_roll, game)
+
+    def collect_resources_from_roll(self, dice_roll, game):
+        """
+        Iterates through all the players settlements and retrieves the surrounding hextiles
+        If the number on the hex tile is equal to the dice roll and there is no robber on the tile,
+        the player will collect the resource corresponding to the hex tile type
+        """
+        print("entered collect resources from roll, dice roll is:", dice_roll)
+        player_list = game.get_player_list()
+        for player in player_list:
+            player_settlement_list = player.get_player_settlements()
+            for settlement in player_settlement_list:
+                surrounding_tiles = settlement.get_surrounding_tiles()
+                for hex_tile in surrounding_tiles:
+                    number = hex_tile.get_number()
+                    resource_type = hex_tile.get_type()
+                    print("number:", number)
+                    print("resource:", resource_type)
+                    if number == dice_roll:
+                        print("entered number is dice roll")
+                        # if there is a robber at this hex tile will not collect any resources
+                        if hex_tile.get_robber() is True:
+                            print("entered hex tile. get robber is true")
+                            return
+                        else:
+                            print("player gets resource", resource_type)
+                            player.collect_resource(resource_type, game)
+
+    def collect_resource(self, resource, game):
+        """
+        Updates player's hand by increasing the passed resource by 1
+        """
+        for key in self._resources:
+            if key == resource:
+                value = self._resources[key]
+                self._resources[key] = value + 1
+        #pygame.display.flip()
+        game.display_player_screen(self._player_name)
 
     def place_settlement(self, game):
         """

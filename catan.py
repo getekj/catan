@@ -70,8 +70,8 @@ def generate_players(game):
         game.update_text_box(str(player.get_player_name()) + ": Place your road")
         player.place_road(game)
 
-    player_list.reverse()  # bringing back to normal order
-    #game.display_player_screen()
+    # bringing back to original order
+    player_list.reverse()
 
 def main():
     """ The initial setup and main game loop that continues to run as long as there is no winner or

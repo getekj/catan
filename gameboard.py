@@ -83,8 +83,8 @@ class GameBoard:
                                             (321, 460), (425, 460), (529, 460)               ]
 
         # each number will correspond to a number token on the HexTile
-        numbers = ["2", "12"]
-        numbers += ["3", "4", "5", "6", "8", "9", "10", "11"] * 2
+        numbers = [2, 12]
+        numbers += [3, 4, 5, 6, 8, 9, 10, 11] * 2
 
         # shuffling to ensure the map is different for each game
         random.shuffle(type_colours)
@@ -263,8 +263,8 @@ class HexTile:
     """
     Creating a hexagon tile for the game board
     Each tile has a will have:
-        a string for the resource type, corresponding colour, and number, which represents the dice roll token
-        an int for the size for the tile in pixels
+        a string for the resource type, corresponding colour
+        an int for the size for the tile in pixels and number, which represents the dice roll token
         a tuple representing the center coordinates
         a list that holds the coordinates of the 6 hexagon corners, the method create_coordinates generate this list
         a bool that indicates whether there is a robber on the space (True), otherwise will be False
@@ -322,7 +322,7 @@ class HexTile:
         Displays the hex tile to the screen surface
         """
         pygame.draw.polygon(screen, self._colour, self._coordinates)
-        print_text(self._number, (self._center[0] - 15, self._center[1] - 15))
+        print_text(str(self._number), (self._center[0] - 15, self._center[1] - 15))
 
 
 class Location:
