@@ -23,7 +23,7 @@ class GameBoard:
         self._list_locations = []
         self._player_list = []
         self._build_buttons = {}
-        self._trade_buttons = []
+        self._trade_buttons = {}
         self._robber_hex_tile = None
         self._dice = None
 
@@ -35,6 +35,9 @@ class GameBoard:
 
     def get_build_buttons(self):
         return self._build_buttons
+
+    def get_trade_buttons(self):
+        return self._trade_buttons
 
     def get_robber_tile(self):
         return self._robber_hex_tile
@@ -64,11 +67,11 @@ class GameBoard:
 
         self._dice = Dice()
 
-        self._trade_buttons.append(Wheat_Button())
-        self._trade_buttons.append(Brick_Button())
-        self._trade_buttons.append(Wood_Button())
-        self._trade_buttons.append(Wool_Button())
-        self._trade_buttons.append(Ore_Button())
+        self._trade_buttons["wheat"] = Wheat_Button()
+        self._trade_buttons["brick"] = Brick_Button()
+        self._trade_buttons["wood"] = Wood_Button()
+        self._trade_buttons["wool"] = Wool_Button()
+        self._trade_buttons["ore"] = Ore_Button()
 
     def create_hex_tiles(self):
         """
@@ -178,7 +181,7 @@ class GameBoard:
         for button in self._build_buttons.values():
             button.draw_button()
 
-        for button in self._trade_buttons:
+        for button in self._trade_buttons.values():
             button.draw_button()
 
         self._dice.draw_dice()

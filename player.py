@@ -90,23 +90,71 @@ class Player:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_x, mouse_y = event.pos
 
+                    # monitoring if player selected a build structure or end turn button
                     build_buttons = game.get_build_buttons()
 
-                    #settlement_button = game.get_settlement_button()
-                    settlement_button = build_buttons["settlement_button"]
-                    settlement_shape = settlement_button.get_shape()
+                    settlement_shape = build_buttons["settlement_button"].get_shape()
                     if settlement_shape.collidepoint(mouse_x, mouse_y):
-                        settlement_button.click_settlement_button(game, player)
+                        build_buttons["settlement_button"].click_settlement_button(game, player)
 
-                    road_button = build_buttons["road_button"]
-                    road_shape = road_button.get_shape()
+                    road_shape = build_buttons["road_button"].get_shape()
                     if road_shape.collidepoint(mouse_x, mouse_y):
-                        road_button.clicked_road_button(game, player)
+                        build_buttons["road_button"].clicked_road_button(game, player)
 
-                    end_turn_button = build_buttons["end_turn"]
-                    end_turn_shape = end_turn_button.get_shape()
+                    end_turn_shape = build_buttons["end_turn"].get_shape()
                     if end_turn_shape.collidepoint(mouse_x, mouse_y):
-                        end_turn = end_turn_button.click_end_turn_button()
+                        end_turn = build_buttons["end_turn"].click_end_turn_button()
+
+                    # monitoring if player selected trade button
+                    trade_buttons = game.get_trade_buttons()
+                    trade_status = False
+
+                    if trade_buttons["wheat"].get_shape().collidepoint(mouse_x, mouse_y):
+                        trade_status = trade_buttons["wheat"].clicked_wheat_button(player)
+                    elif trade_buttons["brick"].get_shape().collidepoint(mouse_x, mouse_y):
+                        trade_status = trade_buttons["brick"].clicked_brick_button(player)
+                    elif trade_buttons["wood"].get_shape().collidepoint(mouse_x, mouse_y):
+                        trade_status = trade_buttons["wood"].clicked_wood_button(player)
+                    elif trade_buttons["wool"].get_shape().collidepoint(mouse_x, mouse_y):
+                        trade_status = trade_buttons["wool"].clicked_wool_button(player)
+                    elif trade_buttons["ore"].get_shape().collidepoint(mouse_x, mouse_y):
+                        trade_status = trade_buttons["ore"].clicked_ore_button(player)
+
+                    if trade_status is True:
+                        print("Which item would you like in return?")
+                        game.update_trade_text("Select which item you'd to receive")
+                        self.trade_cards(trade_status, game, player)
+                        game.update_trade_text("Select which item you'd like to trade in")
+                        trade_status = False
+
+    def trade_cards(self, trade_status, game, player):
+
+        trade_buttons = game.get_trade_buttons()
+
+        while trade_status is True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    trade_mouse_x, trade_mouse_y = event.pos
+
+                    if trade_buttons["wheat"].get_shape().collidepoint(trade_mouse_x, trade_mouse_y):
+                        current_wheat = self._resources["wheat"]
+                        self._resources["wheat"] = current_wheat + 1
+                    elif trade_buttons["brick"].get_shape().collidepoint(trade_mouse_x, trade_mouse_y):
+                        current_brick = self._resources["brick"]
+                        self._resources["brick"] = current_brick + 1
+                    elif trade_buttons["wood"].get_shape().collidepoint(trade_mouse_x, trade_mouse_y):
+                        current_wood = self._resources["wood"]
+                        self._resources["wood"] = current_wood + 1
+                    elif trade_buttons["wool"].get_shape().collidepoint(trade_mouse_x, trade_mouse_y):
+                        current_wool = self._resources["wool"]
+                        self._resources["wool"] = current_wool + 1
+                    elif trade_buttons["ore"].get_shape().collidepoint(trade_mouse_x, trade_mouse_y):
+                        current_ore = self._resources["ore"]
+                        self._resources["ore"] = current_ore + 1
+
+                    game.display_player_screen(self._player_name)
 
     def collect_resources_from_roll(self, dice_roll, game):
         """
@@ -114,7 +162,6 @@ class Player:
         If the number on the hex tile is equal to the dice roll and there is no robber on the tile,
         the player will collect the resource corresponding to the hex tile type
         """
-        print("entered collect resources from roll, dice roll is:", dice_roll)
         player_list = game.get_player_list()
         for player in player_list:
             player_settlement_list = player.get_player_settlements()
@@ -123,16 +170,11 @@ class Player:
                 for hex_tile in surrounding_tiles:
                     number = hex_tile.get_number()
                     resource_type = hex_tile.get_type()
-                    print("number:", number)
-                    print("resource:", resource_type)
                     if number == dice_roll:
-                        print("entered number is dice roll")
                         # if there is a robber at this hex tile will not collect any resources
                         if hex_tile.get_robber() is True:
-                            print("entered hex tile. get robber is true")
                             return
                         else:
-                            print("player gets resource", resource_type)
                             player.collect_resource(resource_type, game)
 
     def collect_resource(self, resource, game):
@@ -143,7 +185,6 @@ class Player:
             if key == resource:
                 value = self._resources[key]
                 self._resources[key] = value + 1
-        #pygame.display.flip()
         game.display_player_screen(self._player_name)
 
     def place_settlement(self, game):
