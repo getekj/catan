@@ -37,6 +37,12 @@ class Player:
     def get_player_colour(self):
         return self._colour
 
+    def get_player_settlements(self):
+        return self._settlements
+
+    def get_player_roads(self):
+        return self._roads
+
     def get_resources(self):
         return self._resources
 
@@ -52,6 +58,21 @@ class Player:
 
     def draw_player_rect(self):
         pygame.draw.rect(screen, BEIGE, self._player_rect)
+
+    def player_turn(self, game, player):
+        """
+        Player starts the turn by rolling the dice then clicking one of the buttons to indicate their desired action
+        Takes the GameBoard and Player objects as parameters
+        """
+
+        # Start the turn by rolling the dice and displaying the roll to the screen
+        dice = game.get_dice()
+        dice_roll = dice.roll_dice()
+        dice.draw_dice(dice_roll)
+
+        # If a 7 was rolled, need to call robber_rolled to move the robber
+        if dice_roll == 7:
+            self.robber_rolled(game, player)
 
     def place_settlement(self, game):
         """
@@ -236,6 +257,40 @@ class Player:
 
         return True
 
+    def robber_rolled(self, game, player):
+        """
+        If number 7 is rolled from the dice, the robber location needs to be moved and both the hex tiles at the old
+        robber location and new robber location need to be updated
+        Takes the GameBoard and Player objects as parameters
+        """
+
+        game.update_text_box(str(player.get_player_name()) + " Click on a tile to move the robber")
+
+        # Loop to wait for player to select new robber location
+        end_turn = False
+        while end_turn is False:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    #store coordinates of the player's mouse click
+                    mouse_x, mouse_y = event.pos
+                    # iterate through HexTile objects and find click closest to center of a hex tile
+                    hex_tiles = game.get_hex_tiles()
+                    for hex_tile in hex_tiles:
+                        hex_tile_coords = hex_tile.get_center_coords()
+                        hex_x, hex_y = hex_tile_coords[0], hex_tile_coords[1]
+                        distance_x = hex_x - mouse_x
+                        distance_y = hex_y - mouse_y
+                        # Checking if the mouse click is within the center of the hex tile
+                        if distance_x > -40 and distance_x < 40 and distance_y > -40 and distance_y < 40:
+                            #game.update_robber_position(hex_tile_coords)
+                            old_robber = game.get_robber_tile()
+                            old_robber.set_robber(False)
+                            game.set_robber_tile(hex_tile)
+                            hex_tile.set_robber(True)
+                            game.update_robber_position()
+                            return
 
     def add_victory_point(self, number_of_points):
         """

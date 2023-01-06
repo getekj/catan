@@ -30,11 +30,14 @@ class GameBoard:
     def get_locations(self):
         return self._list_locations
 
-    def set_robber_tile(self, hex_tile):
-        self._robber_hex_tile = hex_tile
+    def get_dice(self):
+        return self._dice
 
     def get_robber_tile(self):
         return self._robber_hex_tile
+
+    def set_robber_tile(self, hex_tile):
+        self._robber_hex_tile = hex_tile
 
     def get_hex_tiles(self):
         return self._list_hex_tiles
@@ -192,6 +195,24 @@ class GameBoard:
 
         pygame.display.flip()
 
+    def draw_all_settlements(self):
+        """
+        Draws each player's settlements to the screen
+        """
+        for player in self._player_list:
+            player_settlements = player.get_player_settlements()
+            for settlement in player_settlements:
+                settlement.draw_settlement()
+
+    def draw_all_roads(self):
+        """
+        Draws each player's roads to the screen
+        """
+        for player in self._player_list:
+            player_roads = player.get_player_roads()
+            for road in player_roads:
+                road.draw_road()
+
     def display_player_screen(self, player_name):
 
         for player_obj in self._player_list:
@@ -213,36 +234,15 @@ class GameBoard:
         print_text(string_victory_points, (PLAYER_POSITIONS[index][0] + 10, PLAYER_POSITIONS[index][1] + 170))
         pygame.display.flip()
 
-    # def display_player_screen(self):
-    #     """
-    #     Fills in the biege display boxes with player stats
-    #     """
-    #
-    #     # Creating player display screen
-    #     for index in range(len(self._player_list)):
-    #         player = self._player_list[index]
-    #         resources = player.get_resources()
-    #         background = player.get_player_rect()
-    #         victory_points = player.get_victory_points()
-    #
-    #         # clear background
-    #         player.draw_player_rect()
-    #
-    #         down_pos = 35
-    #         for key, value in resources.items():
-    #             line = str(key) + " : " + str(value)
-    #             print_text(line, (PLAYER_POSITIONS[index][0] + 10, PLAYER_POSITIONS[index][1] + down_pos))
-    #             down_pos += 25  # add 25 to move it down screen
-    #             pygame.display.flip()
-    #
-    #         string_victory_points = "VP: " + str(victory_points)
-    #         # 160, 35 + 25*5 + 10 wiggle room
-    #         print_text(string_victory_points, (PLAYER_POSITIONS[index][0] + 10, PLAYER_POSITIONS[index][1] + 170))
-
     def update_robber_position(self):
         """
         Uses the position of the current robber tile to draw the robber image at this location
         """
+        # need to clear the GameBoard background to remove old robber image from old robber HexTile
+        self.draw_hex_tiles()
+        self.draw_all_settlements()
+        self.draw_all_roads()
+
         position = self._robber_hex_tile.get_center_coords()
         robber_image = pygame.image.load("images\\robber.png").convert_alpha()
         screen.blit(robber_image, (position[0] - 25, position[1] - 40))

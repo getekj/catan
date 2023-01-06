@@ -85,6 +85,13 @@ def main():
             if event.type == pygame.QUIT:
                 sys.exit()
 
+        # loop through each player turn until there is a winner
+        player_list = game.get_player_list()
+        for player in player_list:
+            player_name = player.get_player_name()
+            game.update_text_box(str(player_name) + "'s Turn. Click to roll the dice!")
+            player.player_turn(game, player)
+            #game.check_winner
 
 if __name__ == '__main__':
     main()
