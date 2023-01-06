@@ -74,8 +74,39 @@ class Player:
         if dice_roll == 7:
             self.robber_rolled(game, player)
         else:
-            # Check the surrounding tiles of each player's settlements to see if they can collect resources from the dice roll
+            # Otherwise collect resources from the roll
             self.collect_resources_from_roll(dice_roll, game)
+
+        # Update instructions to player
+        game.update_text_box(str(player.get_player_name()) + ", Click an icon to chose an action")
+        game.update_trade_text("Select which item you'd like to trade in")
+
+        # Now we loop waiting for player to select an action button, the loop ends when player selects end turn
+        end_turn = False
+        while end_turn is False:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_x, mouse_y = event.pos
+
+                    build_buttons = game.get_build_buttons()
+
+                    #settlement_button = game.get_settlement_button()
+                    settlement_button = build_buttons["settlement_button"]
+                    settlement_shape = settlement_button.get_shape()
+                    if settlement_shape.collidepoint(mouse_x, mouse_y):
+                        settlement_button.click_settlement_button(game, player)
+
+                    road_button = build_buttons["road_button"]
+                    road_shape = road_button.get_shape()
+                    if road_shape.collidepoint(mouse_x, mouse_y):
+                        road_button.clicked_road_button(game, player)
+
+                    end_turn_button = build_buttons["end_turn"]
+                    end_turn_shape = end_turn_button.get_shape()
+                    if end_turn_shape.collidepoint(mouse_x, mouse_y):
+                        end_turn = end_turn_button.click_end_turn_button()
 
     def collect_resources_from_roll(self, dice_roll, game):
         """

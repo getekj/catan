@@ -79,8 +79,7 @@ class Settlement_Button(Button):
         """
         When the button is clicked, it indicates player would like to build a settlement
         """
-        locations = game.get_locations()
-        player.place_settlement(locations, game)
+        player.place_settlement(game)
 
 class Road_Button(Button):
     """
@@ -96,8 +95,7 @@ class Road_Button(Button):
         """
         Indicates player would like to build a road
         """
-        locations = game.get_locations()
-        player.place_road(locations, game)
+        player.place_road(game)
 
 class City_Button(Button):
     """
@@ -140,7 +138,7 @@ class End_Turn(Button):
         """
         When clicked, indicates player would like to end their turn
         """
-        print("clicked end turn")
+        return True
 
 class Wheat_Button(Button):
     """

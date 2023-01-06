@@ -22,7 +22,7 @@ class GameBoard:
         self._list_hex_tiles = []
         self._list_locations = []
         self._player_list = []
-        self._build_buttons = []
+        self._build_buttons = {}
         self._trade_buttons = []
         self._robber_hex_tile = None
         self._dice = None
@@ -32,6 +32,9 @@ class GameBoard:
 
     def get_dice(self):
         return self._dice
+
+    def get_build_buttons(self):
+        return self._build_buttons
 
     def get_robber_tile(self):
         return self._robber_hex_tile
@@ -53,11 +56,11 @@ class GameBoard:
         Creates the button objects that are used to players to select turn actions
         """
 
-        self._build_buttons.append(Settlement_Button())
-        self._build_buttons.append(Road_Button())
-        self._build_buttons.append(City_Button())
-        self._build_buttons.append(Development_Card())
-        self._build_buttons.append(End_Turn())
+        self._build_buttons["settlement_button"] = Settlement_Button()
+        self._build_buttons["road_button"] = Road_Button()
+        self._build_buttons["city_button"] = City_Button()
+        self._build_buttons["development_card"] = Development_Card()
+        self._build_buttons["end_turn"] = End_Turn()
 
         self._dice = Dice()
 
@@ -172,7 +175,7 @@ class GameBoard:
         """
         Iterates through both buttons lists (build buttons and trade buttons) to draw them to the screen
         """
-        for button in self._build_buttons:
+        for button in self._build_buttons.values():
             button.draw_button()
 
         for button in self._trade_buttons:
@@ -258,6 +261,16 @@ class GameBoard:
         print_text(text, (180, 545))
         pygame.display.flip()
 
+    def update_trade_text(self, text):
+        """
+        Updates the text box located underneath the trade icons to instruct the player
+        Takes text, a string, as a parameter
+        """
+        rect = pygame.Rect(860, 150, 325, 25)
+        pygame.draw.rect(screen, WHITE, rect)
+        print_to_screen = SMALL_FONT.render(text, True, BLACK)
+        screen.blit(print_to_screen, (865, 155))
+        pygame.display.flip()
 
 class HexTile:
     """
