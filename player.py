@@ -107,7 +107,7 @@ class Player:
             self.place_settlement(game)
 
         # update screen with new resource and victory point count
-        game.display_player_screen()
+        game.display_player_screen(self._player_name)
 
     def check_to_build_settlement(self, location):
         """
@@ -201,7 +201,7 @@ class Player:
             # not able to build in this location and need to wait for user to click on new location
             self.place_road(game)
 
-        game.display_player_screen()
+        game.display_player_screen(self._player_name)
 
     def check_to_build_road(self, coordinate_locations):
         """

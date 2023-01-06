@@ -192,31 +192,52 @@ class GameBoard:
 
         pygame.display.flip()
 
-    def display_player_screen(self):
-        """
-        Fills in the biege display boxes with player stats
-        """
+    def display_player_screen(self, player_name):
 
-        # Creating player display screen
-        for index in range(len(self._player_list)):
-            player = self._player_list[index]
-            resources = player.get_resources()
-            background = player.get_player_rect()
-            victory_points = player.get_victory_points()
+        for player_obj in self._player_list:
+            if player_obj.get_player_name() == player_name:
+                player = player_obj
 
-            # clear background
-            player.draw_player_rect()
+        pygame.draw.rect(screen, BEIGE, player.get_player_rect())
+        index = int(player.get_player_name()[-1])  # getting player number
+        index -= 1
 
-            down_pos = 35
-            for key, value in resources.items():
-                line = str(key) + " : " + str(value)
-                print_text(line, (PLAYER_POSITIONS[index][0] + 10, PLAYER_POSITIONS[index][1] + down_pos))
-                down_pos += 25  # add 25 to move it down screen
-                pygame.display.flip()
+        down_pos = 35
+        for key, value in player.get_resources().items():
+            line = str(key) + " : " + str(value)
+            print_text(line, (PLAYER_POSITIONS[index][0] + 10, PLAYER_POSITIONS[index][1] + down_pos))
+            down_pos += 25  # add 25 to move it down screen
+            pygame.display.flip()
 
-            string_victory_points = "VP: " + str(victory_points)
-            # 160, 35 + 25*5 + 10 wiggle room
-            print_text(string_victory_points, (PLAYER_POSITIONS[index][0] + 10, PLAYER_POSITIONS[index][1] + 170))
+        string_victory_points = "VP: " + str(player.get_victory_points())
+        print_text(string_victory_points, (PLAYER_POSITIONS[index][0] + 10, PLAYER_POSITIONS[index][1] + 170))
+        pygame.display.flip()
+
+    # def display_player_screen(self):
+    #     """
+    #     Fills in the biege display boxes with player stats
+    #     """
+    #
+    #     # Creating player display screen
+    #     for index in range(len(self._player_list)):
+    #         player = self._player_list[index]
+    #         resources = player.get_resources()
+    #         background = player.get_player_rect()
+    #         victory_points = player.get_victory_points()
+    #
+    #         # clear background
+    #         player.draw_player_rect()
+    #
+    #         down_pos = 35
+    #         for key, value in resources.items():
+    #             line = str(key) + " : " + str(value)
+    #             print_text(line, (PLAYER_POSITIONS[index][0] + 10, PLAYER_POSITIONS[index][1] + down_pos))
+    #             down_pos += 25  # add 25 to move it down screen
+    #             pygame.display.flip()
+    #
+    #         string_victory_points = "VP: " + str(victory_points)
+    #         # 160, 35 + 25*5 + 10 wiggle room
+    #         print_text(string_victory_points, (PLAYER_POSITIONS[index][0] + 10, PLAYER_POSITIONS[index][1] + 170))
 
     def update_robber_position(self):
         """
