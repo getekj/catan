@@ -14,7 +14,15 @@ class GameBoard:
 
     Center indicates the coordinates of the center of the board
     Hex_size indicates the size of each HexTile in pixels
-    All of the lists contain objects of the class described in the name
+    list_hex_tiles contains a list of all 19 HexTile objects on the board
+    list_locations contains a list of all 54 Location objects on the board
+    player_list contains a list of the four player objects
+    build_buttons contains a dictionary of build-related buttons, with the string of the button name as the key
+        and the button object as the value
+    trade_buttons contains a dictionary of trade-related buttons, with the string of the button name as the key
+        and the button object as the value
+    robber_hex_tile is the HexTile object that the robber is currently on
+    dice is the dice object
     """
     def __init__(self):
         self._center = (425, 250)
@@ -151,6 +159,16 @@ class GameBoard:
                 elif (neigh_x > loc_x - 60 and neigh_x < loc_x + 60) and (neigh_y > loc_y - 35 and neigh_y < loc_y + 35):
                     neighbour_locations.append(neighbour_location)
             location.set_neighbours_list(neighbour_locations)
+
+    def check_winner(self):
+        """
+        Iterates through the player list and checks if any player has 10 or more victory points
+        Returns winning player if there is a winner, Returns None otherwise
+        """
+        for player in self._player_list:
+            if player.get_victory_points() >= 10:
+                return player
+        return None
 
     def draw_gameboard(self):
         """

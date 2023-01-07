@@ -91,7 +91,8 @@ def main():
             player_name = player.get_player_name()
             game.update_text_box(str(player_name) + "'s Turn. Click to roll the dice!")
             player.player_turn(game, player)
-            #game.check_winner
+            winner = game.check_winner()
+
 
 if __name__ == '__main__':
     main()
