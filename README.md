@@ -1,8 +1,8 @@
-# Catan - A multiplayer adventure board game developed in Python
+# Catan - A multiplayer board game developed in Python
 
 Created by: **Joanna Getek**
 
-**Catan** is a Python program that allows four players to play a virtual version of the popular board game. The goal for players is to build and develop their settlements while trading and acquiring resources. 
+**Catan** is a Python program that allows four players to play a virtual version of the popular adventure board game. The goal for players is to build and develop their settlements while trading and acquiring resources. 
 Players gain victory points as they build structures and the first to reach 10 victory points wins!
 
 ## Current Features
@@ -24,7 +24,7 @@ The following functionality is completed:
 
 Here's a walkthrough of implemented features:
 
-<img src='walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='setup_catan.gif' title='Game Setup' width='' alt='Game Setup' />
 
 <!-- Replace this with whatever GIF tool you used! -->
 GIF created with [LICEcap] (https://www.cockos.com/licecap/) for Windows 
