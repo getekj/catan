@@ -16,7 +16,7 @@ The following functionality is completed:
 * [x] Player turns allowing dice roll, trading with the bank, or building structures
 * [x] Players collect resources from the dice roll if their settlement is adjacent to the terrian with the same number
 * [x] If dice roll is equal to 7, the player that rolled the dice can move the "robber" onto any HexTile, blocking all settlements from collecting resources
-* [x] The player statistics are updated will all changes to resources or victory points
+* [x] The player statistics are updated with all changes to resources or victory points
 * [x] If a player reaches 10 victory points, they are declared the winner and the game ends
 
 
