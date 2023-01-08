@@ -24,10 +24,14 @@ The following functionality is completed:
 
 Here's a walkthrough of implemented features:
 
+This is the initial game setup:
 <img src='setup_catan.gif' title='Game Setup' width='' alt='Game Setup' />
 
+Here is a sample turn:
+<img src='turn_catan.gif' title='Example Turn' width='' alt='Example Turn' />
+
 <!-- Replace this with whatever GIF tool you used! -->
-GIF created with [LICEcap] (https://www.cockos.com/licecap/) for Windows 
+All GIFs created with [LICEcap] (https://www.cockos.com/licecap/) for Windows 
 <!-- Recommended tools:
 [Kap](https://getkap.co/) for macOS
 [ScreenToGif](https://www.screentogif.com/) for Windows
